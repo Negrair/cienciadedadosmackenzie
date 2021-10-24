@@ -1,0 +1,61 @@
+#TAREFA PARADIGMAS DE LINGUAGEM DE PROGRAMAÇÃO EM CIÊNCIA DE DADOS - TRILHA1
+
+#TEXTO: Discurso Steve Jobs Stanford Commencement Address
+
+#Escolhi este texto por ser um grande fã de toda a história do Steve Jobs, um dos maiores gênios da história moderna.
+#Nesse discurso ele conta alguns fatos sobre a sua vida e como algumas decisões pessoais ao longo de sua vida tiveram grande #importância na sua trajetória profissional.
+
+
+import urllib.request
+
+texto = []
+
+for line in urllib.request.urlopen('https://raw.githubusercontent.com/Negrair/cienciadedadosmackenzie/main/steve'): 
+    texto.append(line.decode('utf-8'))
+
+    
+for i in range(len(texto)):
+    texto[i] = texto[i].lower()
+    texto[i] = texto[i].replace('\n','')
+    texto[i] = texto[i].replace('.','')
+    texto[i] = texto[i].replace(',','')
+    texto[i] = texto[i].replace('(','')
+    texto[i] = texto[i].replace(')','')
+    texto[i] = texto[i].replace('?','')
+    texto[i] = texto[i].replace('\'','')
+
+
+mydict = {} 
+
+for line in texto:
+    line = line.lower()
+    words = line.split()
+    for word in words:
+        if word not in mydict.keys():
+            mydict[word] = 1
+        else:
+            mydict[word] =  mydict[word] + 1
+print(mydict)
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame(mydict.items(),  columns=['word', 'count']).sort_values('count',ascending=False)
+df = df[df['count'] > 4] # somente termos com mais de 4 ocorrências
+# df = df.iloc[ np.int(len(df)/2) - 10 : np.int(len(df)/2) + 10 ] # para livros ou textos com muitos termos limita a um número mínimo de termos
+
+plt.figure(figsize=(24,10))
+mpl.style.use(['seaborn'])
+sns.barplot(x=df.word,y=df['count'])
+plt.xticks(rotation=90) 
+
+plt.show()
+
+
+
+
+#Apos a leitura do gráfico e excluindo as preposições é possível observar as seguintes palavras que mais se repetem no texto:
+#vida, anos, quando, voces, havia, estava, meses, morte, apple, muito, curso, tarde.
